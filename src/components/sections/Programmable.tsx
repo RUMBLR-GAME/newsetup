@@ -25,7 +25,7 @@ const itemVariants = {
 
 export default function Programmable() {
   return (
-    <section className="py-20 md:py-24 px-6 md:px-8 lg:px-20 bg-surface-raised border-y border-white/[0.04]">
+    <section className="py-20 md:py-24 px-6 md:px-8 lg:px-20 bg-surface-raised">
       <div className="container-fluid">
         <FadeIn>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-12">

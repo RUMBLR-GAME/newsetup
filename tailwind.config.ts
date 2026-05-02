@@ -15,7 +15,10 @@ const config: Config = {
         // Surfaces
         surface: {
           black: "#000000",
-          raised: "#0E0E0E",
+          // Unified to pure black — any non-#000 value creates visible banding
+          // between sections on OLED displays. Cards/sections use #000 plus
+          // subtle borders for separation, not background tone.
+          raised: "#000000",
           elevated: "#1A1A1A",
           page: "#FAFAF8",
         },

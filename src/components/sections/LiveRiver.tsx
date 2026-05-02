@@ -12,7 +12,7 @@ const SolanaRiver = dynamic(() => import("../SolanaRiver"), {
       className="w-full h-[440px] md:h-[520px]"
       style={{
         background:
-          "radial-gradient(ellipse 1100px 400px at 50% 50%, rgba(102,205,131,0.06) 0%, transparent 65%), #000",
+          "radial-gradient(ellipse 1100px 400px at 50% 50%, rgba(102,205,131,0.06) 0%, transparent 65%)",
       }}
     />
   ),
@@ -65,12 +65,6 @@ export default function LiveRiver() {
       aria-label="Live Solana mainnet transaction river"
       className="relative w-full bg-black overflow-hidden"
     >
-      {/* Top divider */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
-      />
-
       {/* Subtle ambient glow — mint left, purple right */}
       <div
         aria-hidden
@@ -107,12 +101,6 @@ export default function LiveRiver() {
           </p>
         </FadeIn>
       </div>
-
-      {/* Bottom divider */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
-      />
     </section>
   );
 }

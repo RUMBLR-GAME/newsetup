@@ -24,7 +24,7 @@ export default function TryItLive() {
       className="relative section overflow-hidden"
       style={{
         background:
-          "radial-gradient(ellipse 1100px 600px at 50% 20%, rgba(102, 205, 131, 0.15) 0%, transparent 65%), #000",
+          "radial-gradient(ellipse 1100px 600px at 50% 20%, rgba(102, 205, 131, 0.15) 0%, transparent 65%)",
       }}
     >
       <div className="container-fluid relative">

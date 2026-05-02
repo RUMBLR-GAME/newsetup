@@ -5,6 +5,7 @@ import { useRef, lazy, Suspense } from "react";
 import dynamic from "next/dynamic";
 import MagneticButton from "../MagneticButton";
 import CountUp from "../CountUp";
+import Balance from "../Balance";
 
 // Phone mockup is heavy with framer-motion springs; lazy-load it
 const PhoneMockup = dynamic(() => import("../PhoneMockup"), {
@@ -80,7 +81,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="hero-headline hero-headline--accent mb-8 md:mb-10 text-mint-mid"
+              className="hero-headline mb-8 md:mb-10 text-mint-mid"
             >
               Anywhere.
             </motion.h1>
@@ -91,10 +92,11 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="text-base md:text-lg text-white/65 max-w-xl mb-10 leading-relaxed"
             >
-              Free, instant payments built on Solana, settled in Australian
-              dollars.{" "}
+              <Balance>
+                Free, instant payments built on Solana, settled in Australian dollars.
+              </Balance>{" "}
               <span className="text-white font-semibold">
-                Built in Queensland. Made for Australia.
+                <Balance>Built in Queensland. Made for Australia.</Balance>
               </span>
             </motion.p>
 

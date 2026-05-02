@@ -4,5 +4,24 @@
     <loc>https://fluid.au/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <lastmod>2026-05-02</lastmod>
+  </url>
+  <url>
+    <loc>https://fluid.au/security</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-05-02</lastmod>
+  </url>
+  <url>
+    <loc>https://fluid.au/privacy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-05-02</lastmod>
+  </url>
+  <url>
+    <loc>https://fluid.au/terms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-05-02</lastmod>
   </url>
 </urlset>

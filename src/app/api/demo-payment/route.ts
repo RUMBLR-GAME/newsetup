@@ -58,8 +58,9 @@ export async function POST(req: Request) {
   } catch (err: any) {
     return NextResponse.json(
       {
-        error:
-          "Demo wallet is not configured. Set SOLANA_DEMO_SECRET_KEY env var.",
+        error: "Demo isn't ready yet — wallet not configured.",
+        details:
+          "The site owner needs to set SOLANA_DEMO_SECRET_KEY in Vercel env vars and fund a devnet wallet. Run `node scripts/generate-demo-wallet.js` to generate one.",
       },
       { status: 503 }
     );

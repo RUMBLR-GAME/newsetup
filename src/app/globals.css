@@ -26,6 +26,21 @@ body {
   overflow-x: hidden;
 }
 
+/* === Orphan prevention === */
+/* All headings use text-wrap: balance so the browser distributes lines evenly
+   and never leaves a single word on the last line. Supported in modern Chrome,
+   Edge, Safari 17.4+, Firefox 121+. Older browsers fall back to normal wrap. */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* Body paragraphs use text-wrap: pretty — same idea but optimised for prose:
+   it specifically prevents widows on the last line, while leaving the rest of
+   the paragraph alone. */
+p {
+  text-wrap: pretty;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -81,18 +96,10 @@ body {
 
 /* Hero typography — Inter Bold (per the typography test, Bold won) */
 .hero-headline {
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-weight: 500;
+  letter-spacing: -0.03em;
   line-height: 0.95;
   font-size: clamp(56px, 11vw, 128px);
-}
-
-/* Modifier for the second-line accent (e.g. "Anywhere.") — thinner and italic
-   for the elegant counterpoint to the bold first line. */
-.hero-headline--accent {
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: -0.02em;
 }
 
 /* Hero mint glow */
