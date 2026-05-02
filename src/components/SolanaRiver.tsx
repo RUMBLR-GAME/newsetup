@@ -34,6 +34,38 @@ function rgba(template: string, alpha: number): string {
   return template.replace("ALPHA", alpha.toFixed(3));
 }
 
+/**
+ * Draw a horizontally-oriented capsule (rounded rectangle with full
+ * semicircular ends) centred at (cx, cy). Width is the long axis, height
+ * is the short axis. If width <= height, falls back to a circle.
+ */
+function drawCapsule(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  width: number,
+  height: number
+) {
+  const r = height / 2;
+  if (width <= height) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    return;
+  }
+  const halfW = width / 2;
+  const left = cx - halfW + r;
+  const right = cx + halfW - r;
+  ctx.beginPath();
+  ctx.moveTo(left, cy - r);
+  ctx.lineTo(right, cy - r);
+  ctx.arc(right, cy, r, -Math.PI / 2, Math.PI / 2);
+  ctx.lineTo(left, cy + r);
+  ctx.arc(left, cy, r, Math.PI / 2, -Math.PI / 2);
+  ctx.closePath();
+  ctx.fill();
+}
+
 type SolanaRiverProps = {
   height?: number;
   className?: string;
@@ -186,33 +218,47 @@ export default function SolanaRiver({
 
         const stops = colourStops(p.tx.colour);
 
+        // === Capsule particles — elongated rounded rects, wider than tall ===
+        // The aspect ratio reads as a streak of light moving through space,
+        // rather than a generic round dot. Mobile gets even more elongation
+        // since the lanes are narrower.
+        const aspectRatio = mobile ? 4.5 : 3.6;
+
+        // Trail: small thin capsules with strong horizontal stretch
         for (const t of p.trail) {
           const tx = t.x * w;
-          ctx!.beginPath();
-          ctx!.fillStyle = rgba(stops.mid, t.alpha * 0.25);
-          ctx!.arc(tx, py, 1.8 * p.size, 0, Math.PI * 2);
-          ctx!.fill();
+          const trailH = 1.6 * p.size;
+          const trailW = trailH * (aspectRatio + 1);
+          ctx!.fillStyle = rgba(stops.mid, t.alpha * 0.22);
+          drawCapsule(ctx!, tx, py, trailW, trailH);
         }
 
-        const radius = 4 + p.size;
-        const glowGrad = ctx!.createRadialGradient(px, py, 0, px, py, radius * 6);
+        // Body height (and derived width) of the main capsule
+        const capH = 5 + p.size * 1.4;          // tall axis (vertical)
+        const capW = capH * aspectRatio;        // long axis (horizontal)
+        const haloRadius = capH * 5;            // halo is still radial — looks natural
+
+        // Soft radial glow around the capsule
+        const glowGrad = ctx!.createRadialGradient(px, py, 0, px, py, haloRadius);
         glowGrad.addColorStop(0, rgba(stops.glow, 0.85));
-        glowGrad.addColorStop(0.4, rgba(stops.mid, 0.35));
+        glowGrad.addColorStop(0.4, rgba(stops.mid, 0.32));
         glowGrad.addColorStop(1, rgba(stops.mid, 0));
         ctx!.fillStyle = glowGrad;
         ctx!.beginPath();
-        ctx!.arc(px, py, radius * 6, 0, Math.PI * 2);
+        ctx!.arc(px, py, haloRadius, 0, Math.PI * 2);
         ctx!.fill();
 
+        // Main capsule body — coloured fill
         ctx!.fillStyle = p.tx.colour === "purple" ? "#C79FFF" : "#9CE0AE";
-        ctx!.beginPath();
-        ctx!.arc(px, py, radius, 0, Math.PI * 2);
-        ctx!.fill();
+        drawCapsule(ctx!, px, py, capW, capH);
 
+        // Hot core — a smaller, brighter capsule slightly toward the leading edge
+        // (gives a sense of direction — the bright bit "leads" the trail)
+        const hotW = capW * 0.55;
+        const hotH = capH * 0.5;
+        const hotCx = px + capW * 0.12;  // shift slightly forward (right)
         ctx!.fillStyle = "rgba(255, 255, 255, 0.9)";
-        ctx!.beginPath();
-        ctx!.arc(px, py, radius * 0.45, 0, Math.PI * 2);
-        ctx!.fill();
+        drawCapsule(ctx!, hotCx, py, hotW, hotH);
 
         remaining.push(p);
       }
