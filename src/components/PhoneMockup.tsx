@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import SolanaMark from "./SolanaMark";
 
 /**
  * Mouse-reactive iPhone mockup showing the Fluid app.
@@ -243,41 +244,8 @@ export default function PhoneMockup() {
                     <span className="text-mint-ink/50 text-[10px] tracking-[0.14em] uppercase font-bold">
                       •••• 4321
                     </span>
-                    {/* Real Solana logomark */}
                     <div className="flex items-center gap-1.5">
-                      <svg
-                        viewBox="0 0 508 400"
-                        className="h-3 w-auto"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-label="Solana"
-                      >
-                        <defs>
-                          <linearGradient
-                            id="phone-sol-grad"
-                            x1="0"
-                            y1="0"
-                            x2="508"
-                            y2="0"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop offset="0%" stopColor="#9945FF" />
-                            <stop offset="100%" stopColor="#14F195" />
-                          </linearGradient>
-                        </defs>
-                        <path
-                          d="M82 18 H433 a18 18 0 0 1 14 7 L496 78 a8 8 0 0 1 -6 13 H75 a18 18 0 0 1 -14 -7 L12 32 a8 8 0 0 1 6 -13 H82 Z"
-                          fill="url(#phone-sol-grad)"
-                        />
-                        <path
-                          d="M75 154 H426 a18 18 0 0 1 14 7 L489 215 a8 8 0 0 1 -6 13 H82 a18 18 0 0 1 -14 -7 L19 167 a8 8 0 0 1 6 -13 H75 Z"
-                          transform="matrix(-1 0 0 1 508 0)"
-                          fill="url(#phone-sol-grad)"
-                        />
-                        <path
-                          d="M82 290 H433 a18 18 0 0 1 14 7 L496 350 a8 8 0 0 1 -6 13 H75 a18 18 0 0 1 -14 -7 L12 304 a8 8 0 0 1 6 -13 H82 Z"
-                          fill="url(#phone-sol-grad)"
-                        />
-                      </svg>
+                      <SolanaMark markOnly height={12} />
                       <span className="text-mint-ink text-[11px] font-bold tracking-tight">
                         Solana
                       </span>

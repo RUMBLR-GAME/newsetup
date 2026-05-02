@@ -13,14 +13,11 @@ export default function Footer() {
               Australia.
             </p>
             {/* Powered by Solana */}
-            <div className="mt-8 flex items-center gap-2">
+            <div className="mt-8 flex items-center gap-3">
               <span className="text-[10px] tracking-[0.16em] text-white/40 uppercase font-semibold">
                 Powered by
               </span>
-              <SolanaMark height={14} className="opacity-80" />
-              <span className="text-sm font-semibold text-white/70 tracking-tight">
-                Solana
-              </span>
+              <SolanaMark height={16} className="text-white/80" />
             </div>
           </div>
 
