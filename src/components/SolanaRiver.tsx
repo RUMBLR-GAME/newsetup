@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSolanaRiver, type RiverTx } from "@/lib/useSolanaRiver";
+import { useSolanaRiver, type RiverTx, type RiverColour } from "@/lib/useSolanaRiver";
 
 type Particle = {
   tx: RiverTx;
@@ -16,9 +16,25 @@ type Particle = {
 const LANES_DESKTOP = 6;
 const LANES_MOBILE = 4;
 
-// Speed: viewport-widths-per-second
 const MIN_SPEED = 0.55;
 const MAX_SPEED = 0.9;
+
+// Mint palette
+const MINT_GLOW = "rgba(156, 224, 174, ALPHA)";
+const MINT_MID = "rgba(102, 205, 131, ALPHA)";
+// Purple palette — tuned to read as Solana brand purple, sits cleanly next to mint
+const PURPLE_GLOW = "rgba(199, 159, 255, ALPHA)";  // soft lavender highlight
+const PURPLE_MID = "rgba(153, 69, 255, ALPHA)";    // Solana purple
+
+function colourStops(c: RiverColour): { glow: string; mid: string } {
+  return c === "purple"
+    ? { glow: PURPLE_GLOW, mid: PURPLE_MID }
+    : { glow: MINT_GLOW, mid: MINT_MID };
+}
+
+function rgba(template: string, alpha: number): string {
+  return template.replace("ALPHA", alpha.toFixed(3));
+}
 
 type SolanaRiverProps = {
   height?: number;
@@ -32,7 +48,6 @@ function formatAud(n: number): string {
   return `$${n.toFixed(2)}`;
 }
 
-/** Detect mobile via viewport width + touch capability — avoids UA sniffing pitfalls */
 function detectIsMobile(): boolean {
   if (typeof window === "undefined") return false;
   return (
@@ -61,15 +76,12 @@ export default function SolanaRiver({
 
   const { txs } = useSolanaRiver(lanes);
   const [hovered, setHovered] = useState<Particle | null>(null);
-  // On touch devices, "previewed" replaces "hovered" — first tap shows the
-  // tooltip, second tap on the same dot opens Solscan.
   const [previewed, setPreviewed] = useState<{
     tx: RiverTx;
     x: number;
     lane: number;
   } | null>(null);
 
-  // Detect mobile + react to resize / orientation changes
   useEffect(() => {
     const update = () => {
       const m = detectIsMobile();
@@ -81,14 +93,12 @@ export default function SolanaRiver({
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Queue new txs as they arrive
   useEffect(() => {
     if (!txs.length) return;
     const incoming = txs.slice(-60);
     queueRef.current = [...queueRef.current, ...incoming].slice(-300);
   }, [txs]);
 
-  // prefers-reduced-motion
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     reduceMotionRef.current = mq.matches;
@@ -99,7 +109,6 @@ export default function SolanaRiver({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // Setup canvas + DPR
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -108,8 +117,6 @@ export default function SolanaRiver({
     function resize() {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
-      // Cap DPR at 1.5 on mobile (vs 2 on desktop) for performance —
-      // a 2× canvas on a 6.7" phone is 4M pixels, that's expensive.
       const dprCap = isMobileRef.current ? 1.5 : 2;
       const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
       dprRef.current = dpr;
@@ -126,7 +133,6 @@ export default function SolanaRiver({
     return () => ro.disconnect();
   }, []);
 
-  // Animation loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -144,24 +150,14 @@ export default function SolanaRiver({
       const mobile = isMobileRef.current;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Trail fade
       ctx!.fillStyle = "rgba(0, 0, 0, 0.14)";
       ctx!.fillRect(0, 0, w, h);
 
       const activeLanes = mobile ? LANES_MOBILE : LANES_DESKTOP;
       const laneHeight = h / activeLanes;
 
-      // Mobile gets ~half the spawn rate + lower max — keeps 60fps on midrange phones
-      const spawnRate = reduceMotionRef.current
-        ? 250
-        : mobile
-        ? 50
-        : 25;
-      const maxParticles = reduceMotionRef.current
-        ? 30
-        : mobile
-        ? 50
-        : 110;
+      const spawnRate = reduceMotionRef.current ? 250 : mobile ? 50 : 25;
+      const maxParticles = reduceMotionRef.current ? 30 : mobile ? 50 : 110;
 
       while (
         now - lastSpawn > spawnRate &&
@@ -170,7 +166,6 @@ export default function SolanaRiver({
       ) {
         const tx = queueRef.current.shift()!;
         const speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
-        // Clamp lane to active lane count (in case mobile/desktop switched)
         const lane = tx.lane % activeLanes;
         particlesRef.current.push({
           tx,
@@ -190,7 +185,6 @@ export default function SolanaRiver({
         p.age += dt;
         if (p.x > 1.15) continue;
 
-        // Mobile: shorter trail (fewer draw calls per particle)
         const maxTrail = mobile ? 10 : 16;
         p.trail.push({ x: p.x, alpha: 1 });
         if (p.trail.length > maxTrail) p.trail.shift();
@@ -200,11 +194,13 @@ export default function SolanaRiver({
         const bob = Math.sin(p.age * 2 + p.tx.spawnAt) * 4;
         const py = (p.lane + 0.5) * laneHeight + bob;
 
+        const stops = colourStops(p.tx.colour);
+
         // Trail
         for (const t of p.trail) {
           const tx = t.x * w;
           ctx!.beginPath();
-          ctx!.fillStyle = `rgba(102, 205, 131, ${t.alpha * 0.25})`;
+          ctx!.fillStyle = rgba(stops.mid, t.alpha * 0.25);
           ctx!.arc(tx, py, 1.8 * p.size, 0, Math.PI * 2);
           ctx!.fill();
         }
@@ -212,21 +208,22 @@ export default function SolanaRiver({
         // Glow halo
         const radius = 4 + p.size;
         const glowGrad = ctx!.createRadialGradient(px, py, 0, px, py, radius * 6);
-        glowGrad.addColorStop(0, "rgba(156, 224, 174, 0.85)");
-        glowGrad.addColorStop(0.4, "rgba(102, 205, 131, 0.35)");
-        glowGrad.addColorStop(1, "rgba(102, 205, 131, 0)");
+        glowGrad.addColorStop(0, rgba(stops.glow, 0.85));
+        glowGrad.addColorStop(0.4, rgba(stops.mid, 0.35));
+        glowGrad.addColorStop(1, rgba(stops.mid, 0));
         ctx!.fillStyle = glowGrad;
         ctx!.beginPath();
         ctx!.arc(px, py, radius * 6, 0, Math.PI * 2);
         ctx!.fill();
 
-        // Core
-        ctx!.fillStyle = "#9CE0AE";
+        // Core dot
+        ctx!.fillStyle =
+          p.tx.colour === "purple" ? "#C79FFF" : "#9CE0AE";
         ctx!.beginPath();
         ctx!.arc(px, py, radius, 0, Math.PI * 2);
         ctx!.fill();
 
-        // Hot center
+        // White hot center
         ctx!.fillStyle = "rgba(255, 255, 255, 0.9)";
         ctx!.beginPath();
         ctx!.arc(px, py, radius * 0.45, 0, Math.PI * 2);
@@ -239,7 +236,6 @@ export default function SolanaRiver({
 
         if (labelAlpha > 0.02) {
           const labelText = formatAud(p.tx.audAmount);
-          // Slightly smaller labels on mobile
           const fontSize = mobile ? 10 : ambient ? 11 : 12;
           ctx!.font = `600 ${fontSize}px Inter, system-ui, sans-serif`;
           ctx!.textBaseline = "middle";
@@ -250,7 +246,7 @@ export default function SolanaRiver({
           ctx!.fillStyle = `rgba(0, 0, 0, ${0.55 * labelAlpha})`;
           ctx!.fillText(labelText, labelX + 1, labelY + 1);
 
-          ctx!.fillStyle = `rgba(156, 224, 174, ${labelAlpha})`;
+          ctx!.fillStyle = rgba(stops.glow, labelAlpha);
           ctx!.fillText(labelText, labelX, labelY);
         }
 
@@ -267,15 +263,14 @@ export default function SolanaRiver({
     };
   }, [ambient]);
 
-  // ----- Pointer interactions: hover (desktop) + tap-preview (touch) -----
   function findNearestParticle(x: number, y: number, radius = 36) {
-    const { w, h } = sizeRef.current;
+    const { h } = sizeRef.current;
     const activeLanes = isMobileRef.current ? LANES_MOBILE : LANES_DESKTOP;
     const laneHeight = h / activeLanes;
     let nearest: Particle | null = null;
     let nearestDist = Infinity;
     for (const p of particlesRef.current) {
-      const px = p.x * w;
+      const px = p.x * sizeRef.current.w;
       const py = (p.lane + 0.5) * laneHeight;
       const d = Math.hypot(px - x, py - y);
       if (d < radius && d < nearestDist) {
@@ -287,7 +282,7 @@ export default function SolanaRiver({
   }
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (isMobileRef.current) return; // touch devices use tap, not hover
+    if (isMobileRef.current) return;
     const container = containerRef.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
@@ -298,8 +293,7 @@ export default function SolanaRiver({
     setHovered(null);
   }
 
-  function onClick(e: React.MouseEvent<HTMLDivElement>) {
-    // Desktop: hovered particle is what we open
+  function onClick() {
     if (hovered) {
       window.open(
         `https://solscan.io/tx/${hovered.tx.signature}`,
@@ -310,23 +304,18 @@ export default function SolanaRiver({
   }
 
   function onTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
-    // On touch: first tap freezes a preview snapshot of the nearest particle
-    // at the tap location, second tap on the preview (or the dot near it)
-    // opens Solscan. This gives users time to see the AUD before committing.
     const container = containerRef.current;
     const touch = e.changedTouches[0];
     if (!container || !touch) return;
     const rect = container.getBoundingClientRect();
     const x = touch.clientX - rect.left;
     const y = touch.clientY - rect.top;
-    const hit = findNearestParticle(x, y, 44); // larger touch target
+    const hit = findNearestParticle(x, y, 44);
 
     if (!hit) {
       setPreviewed(null);
       return;
     }
-
-    // If we already had a preview and the tap is roughly the same area, open it
     if (previewed) {
       window.open(
         `https://solscan.io/tx/${previewed.tx.signature}`,
@@ -336,12 +325,7 @@ export default function SolanaRiver({
       setPreviewed(null);
       return;
     }
-
-    // First tap: freeze the preview at the tap location (particle is moving fast,
-    // but the preview UI sits where the user can see it for 2.5s)
     setPreviewed({ tx: hit.tx, x: x / sizeRef.current.w, lane: hit.lane });
-
-    // Auto-clear preview after 2.5s if user doesn't tap again
     window.setTimeout(() => {
       setPreviewed((p) => (p?.tx.signature === hit.tx.signature ? null : p));
     }, 2500);
@@ -372,7 +356,6 @@ export default function SolanaRiver({
         className="absolute inset-0 w-full h-full pointer-events-none"
       />
 
-      {/* Edge fade gradients */}
       <div
         aria-hidden
         className="absolute inset-y-0 left-0 w-24 md:w-48 pointer-events-none"
@@ -390,17 +373,24 @@ export default function SolanaRiver({
         }}
       />
 
-      {/* Tooltip — desktop hover OR mobile tap-preview */}
       {showTooltipAt && (
         <div
-          className="absolute pointer-events-none z-30 -translate-x-1/2 -translate-y-full bg-black/95 backdrop-blur-sm border border-mint-mid/50 rounded-lg px-3 py-2 text-[10px] tracking-wide font-mono shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+          className={`absolute pointer-events-none z-30 -translate-x-1/2 -translate-y-full bg-black/95 backdrop-blur-sm rounded-lg px-3 py-2 text-[10px] tracking-wide font-mono shadow-[0_8px_32px_rgba(0,0,0,0.6)] border ${
+            showTooltipAt.tx.colour === "purple"
+              ? "border-[#C79FFF]/50"
+              : "border-mint-mid/50"
+          }`}
           style={{
             left: `${showTooltipAt.x * 100}%`,
             top: `${((showTooltipAt.lane + 0.5) / activeLanes) * 100}%`,
             marginTop: "-14px",
           }}
         >
-          <div className="text-mint-glow font-semibold mb-0.5 whitespace-nowrap">
+          <div
+            className={`font-semibold mb-0.5 whitespace-nowrap ${
+              showTooltipAt.tx.colour === "purple" ? "text-[#C79FFF]" : "text-mint-glow"
+            }`}
+          >
             {formatAud(showTooltipAt.tx.audAmount)} AUD ·{" "}
             {previewed ? "tap again to open" : "open on Solscan ↗"}
           </div>

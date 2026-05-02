@@ -32,7 +32,7 @@ export default function Header() {
     >
       <div className="container-fluid flex items-center justify-between px-6 md:px-8 lg:px-20 py-4 md:py-5 gap-4">
         <a href="#" aria-label="Fluid home" className="flex items-center shrink-0">
-          <Logo letterColor="#FFFFFF" dotColor="#66CD83" height={26} />
+          <Logo letterColor="#FFFFFF" dotColor="#66CD83" height={34} />
         </a>
 
         <div className="hidden lg:flex items-center gap-3">

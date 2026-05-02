@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import ScrollProgress from "@/components/ScrollProgress";
 import Hero from "@/components/sections/Hero";
+import LiveRiver from "@/components/sections/LiveRiver";
 import TryItLive from "@/components/sections/TryItLive";
 import HowItWorks from "@/components/sections/HowItWorks";
 import FeeComparison from "@/components/sections/FeeComparison";
@@ -19,6 +20,7 @@ export default function Home() {
       <ScrollProgress />
       <Header />
       <Hero />
+      <LiveRiver />
       <TryItLive />
       <HowItWorks />
       <FeeComparison />

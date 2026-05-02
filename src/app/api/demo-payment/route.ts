@@ -9,6 +9,9 @@ import { loadDemoKeypair } from "@/lib/server/wallet";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Devnet confirmations occasionally take 8-12s; Vercel's default 10s timeout
+// can kill the request mid-flight. 30s gives plenty of headroom.
+export const maxDuration = 30;
 
 const DEVNET_RPC =
   process.env.SOLANA_DEVNET_RPC || "https://api.devnet.solana.com";
@@ -65,7 +68,21 @@ export async function POST(req: Request) {
   try {
     const connection = new Connection(DEVNET_RPC, "confirmed");
 
-    // Build a 1000-lamport self-transfer — minimal cost, real on-chain proof
+    // Pre-flight balance check — gives the user a clear "wallet is empty"
+    // error instead of a confusing "Transaction failed" generic one.
+    const balance = await connection.getBalance(keypair.publicKey);
+    if (balance < TRANSFER_LAMPORTS + 5_000) {
+      return NextResponse.json(
+        {
+          error:
+            "Demo wallet is out of devnet SOL. Refill at faucet.solana.com.",
+          details: `Wallet ${keypair.publicKey.toBase58()} has ${balance} lamports.`,
+        },
+        { status: 503 }
+      );
+    }
+
+    // Build a 1000-lamport self-transfer
     const { blockhash, lastValidBlockHeight } =
       await connection.getLatestBlockhash("confirmed");
 
@@ -88,29 +105,58 @@ export async function POST(req: Request) {
       maxRetries: 3,
     });
 
-    // Wait for confirmation (with timeout via blockhash expiry)
-    const confirmation = await connection.confirmTransaction(
-      { signature, blockhash, lastValidBlockHeight },
-      "confirmed"
-    );
+    // Wait for confirmation with our own timeout — devnet's confirmTransaction
+    // can hang on busy slots. We poll the signature status manually so we can
+    // bail at 20s and still return the signature for Solscan lookup.
+    const CONFIRM_TIMEOUT_MS = 20_000;
+    const confirmDeadline = Date.now() + CONFIRM_TIMEOUT_MS;
+    let confirmed = false;
+    let confirmErr: any = null;
+
+    while (Date.now() < confirmDeadline) {
+      const status = await connection.getSignatureStatus(signature, {
+        searchTransactionHistory: false,
+      });
+      const s = status.value;
+      if (s) {
+        if (s.err) {
+          confirmErr = s.err;
+          break;
+        }
+        if (
+          s.confirmationStatus === "confirmed" ||
+          s.confirmationStatus === "finalized"
+        ) {
+          confirmed = true;
+          break;
+        }
+      }
+      await new Promise((r) => setTimeout(r, 600));
+    }
     const durationMs = Date.now() - startedAt;
 
-    if (confirmation.value.err) {
+    if (confirmErr) {
       return NextResponse.json(
         {
           error: "Transaction confirmed with error",
-          details: JSON.stringify(confirmation.value.err),
+          details: JSON.stringify(confirmErr),
+          signature,
+          explorerUrl: `https://solscan.io/tx/${signature}?cluster=devnet`,
         },
         { status: 502 }
       );
     }
 
+    // Even if we hit the timeout without seeing "confirmed" status, we DID
+    // submit the transaction — return the signature so the user can verify
+    // on Solscan themselves. Not a hard failure.
     return NextResponse.json({
       signature,
       cluster: "devnet",
       explorerUrl: `https://solscan.io/tx/${signature}?cluster=devnet`,
       lamports: TRANSFER_LAMPORTS,
       durationMs,
+      confirmed,
       from: keypair.publicKey.toBase58(),
       to: keypair.publicKey.toBase58(),
     });
@@ -119,7 +165,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: "Transaction failed",
-        details: err?.message ?? "unknown",
+        details: err?.message ?? String(err) ?? "unknown",
       },
       { status: 500 }
     );
