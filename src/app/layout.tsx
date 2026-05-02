@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s · Fluid",
   },
   description:
-    "Free, instant payments built on Solana, settled in Australian dollars. AUDD is issued under ASIC AFSL by AUDC Pty Ltd. Beta running with 500 Townsville users.",
+    "Free, instant payments built on Solana, settled in Australian dollars. AUDD is issued under ASIC AFSL by AUDC Pty Ltd. Built in Queensland.",
   keywords: [
     "Solana payments",
     "Australia",

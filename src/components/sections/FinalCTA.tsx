@@ -66,8 +66,8 @@ export default function FinalCTA() {
               speed it should.
             </h2>
             <p className="relative text-mint-ink/75 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-              We&apos;re onboarding 500 Townsville beta users now. Sydney and
-              Melbourne next, June 2026. Get on the list.
+              Built in Queensland. Made for Australia. Get early access — we&apos;ll
+              email you the moment Fluid opens up.
             </p>
 
             {status === "success" ? (

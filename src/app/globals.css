@@ -87,6 +87,14 @@ body {
   font-size: clamp(56px, 11vw, 128px);
 }
 
+/* Modifier for the second-line accent (e.g. "Anywhere.") — thinner and italic
+   for the elegant counterpoint to the bold first line. */
+.hero-headline--accent {
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
 /* Hero mint glow */
 .hero-glow {
   background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(102, 205, 131, 0.22) 0%, transparent 65%);

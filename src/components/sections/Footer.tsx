@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Logo from "../Logo";
+import SolanaMark from "../SolanaMark";
 
 export default function Footer() {
   return (
@@ -9,21 +9,18 @@ export default function Footer() {
           <div className="md:col-span-4">
             <Logo letterColor="#FFFFFF" dotColor="#66CD83" height={32} />
             <p className="text-sm text-white/55 mt-6 leading-relaxed max-w-xs">
-              Money that moves at the speed it should. Built in Townsville. Made for
+              Money that moves at the speed it should. Built in Queensland. Made for
               Australia.
             </p>
             {/* Powered by Solana */}
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-8 flex items-center gap-2">
               <span className="text-[10px] tracking-[0.16em] text-white/40 uppercase font-semibold">
                 Powered by
               </span>
-              <Image
-                src="/solana-logo.svg"
-                alt="Solana"
-                width={92}
-                height={14}
-                className="opacity-80 hover:opacity-100 transition-opacity"
-              />
+              <SolanaMark height={14} className="opacity-80" />
+              <span className="text-sm font-semibold text-white/70 tracking-tight">
+                Solana
+              </span>
             </div>
           </div>
 
@@ -68,7 +65,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <p className="text-xs text-white/40">
-            © 2026 Fluid. Made in Townsville 🇦🇺
+            © 2026 Fluid. Made in Queensland 🇦🇺
           </p>
           <div className="flex gap-6 text-xs text-white/40">
             <a href="#" className="hover:text-white/70 transition-colors">Privacy</a>

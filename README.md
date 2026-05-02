@@ -266,7 +266,7 @@ Lighthouse target: 90+ Performance, 95+ Accessibility / Best Practices / SEO.
 
 ## Credits
 
-Built by Gray Sunderland, Townsville. Designed in Figma. Coded with Claude.
+Built by Gray Sunderland, Queensland. Designed in Figma. Coded with Claude.
 
 ---
 

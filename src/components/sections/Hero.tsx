@@ -103,7 +103,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="hero-headline mb-8 md:mb-10 text-mint-mid"
+              className="hero-headline hero-headline--accent mb-8 md:mb-10 text-mint-mid"
             >
               Anywhere.
             </motion.h1>
@@ -116,12 +116,10 @@ export default function Hero() {
             >
               Free, instant payments built on Solana, settled in Australian
               dollars. Every dot in the river is a real Solana transaction —
-              that's how fast the network is. Beta running with{" "}
+              that's how fast the network is.{" "}
               <span className="text-white font-semibold">
-                <CountUp to={500} duration={1.4} separator />
-                {" "}Townsville users
+                Built in Queensland. Made for Australia.
               </span>
-              {" "}— Sydney and Melbourne next.
             </motion.p>
 
             <motion.div
