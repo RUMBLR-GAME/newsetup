@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://rsms.me/inter/inter.css");
+
+html {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000;
+  color: #fff;
+  scroll-behavior: smooth;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Visible focus rings for keyboard nav */
+*:focus-visible {
+  outline: 2px solid #66CD83;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Mint mesh gradient utility */
+.bg-mesh-mint {
+  background-image:
+    radial-gradient(ellipse 50% 30% at 75% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 10% 90%, rgba(13, 46, 26, 0.35) 0%, transparent 65%),
+    linear-gradient(135deg, #9CE0AE 0%, #66CD83 40%, #2E8045 100%);
+}
+
+.shadow-card-mint {
+  box-shadow:
+    0px 24px 60px 0px rgba(102, 205, 131, 0.4),
+    0px 32px 80px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Eyebrow pill style */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(102, 205, 131, 0.12);
+  border: 0.5px solid rgba(102, 205, 131, 0.3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #9CE0AE;
+  text-transform: uppercase;
+}
+
+.section {
+  padding: 96px 24px;
+}
+@media (min-width: 768px) { .section { padding: 120px 48px; } }
+@media (min-width: 1024px) { .section { padding: 160px 80px; } }
+
+.container-fluid {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hero typography — Inter Bold (per the typography test, Bold won) */
+.hero-headline {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  font-size: clamp(56px, 11vw, 128px);
+}
+
+/* Hero mint glow */
+.hero-glow {
+  background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(102, 205, 131, 0.22) 0%, transparent 65%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
