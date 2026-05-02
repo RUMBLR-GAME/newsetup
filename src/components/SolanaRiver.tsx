@@ -19,12 +19,10 @@ const LANES_MOBILE = 4;
 const MIN_SPEED = 0.55;
 const MAX_SPEED = 0.9;
 
-// Mint palette
 const MINT_GLOW = "rgba(156, 224, 174, ALPHA)";
 const MINT_MID = "rgba(102, 205, 131, ALPHA)";
-// Purple palette — tuned to read as Solana brand purple, sits cleanly next to mint
-const PURPLE_GLOW = "rgba(199, 159, 255, ALPHA)";  // soft lavender highlight
-const PURPLE_MID = "rgba(153, 69, 255, ALPHA)";    // Solana purple
+const PURPLE_GLOW = "rgba(199, 159, 255, ALPHA)";
+const PURPLE_MID = "rgba(153, 69, 255, ALPHA)";
 
 function colourStops(c: RiverColour): { glow: string; mid: string } {
   return c === "purple"
@@ -39,14 +37,7 @@ function rgba(template: string, alpha: number): string {
 type SolanaRiverProps = {
   height?: number;
   className?: string;
-  ambient?: boolean;
 };
-
-function formatAud(n: number): string {
-  if (n >= 1000) return `$${n.toLocaleString("en-AU", { maximumFractionDigits: 0 })}`;
-  if (n >= 100) return `$${n.toFixed(0)}`;
-  return `$${n.toFixed(2)}`;
-}
 
 function detectIsMobile(): boolean {
   if (typeof window === "undefined") return false;
@@ -59,7 +50,6 @@ function detectIsMobile(): boolean {
 export default function SolanaRiver({
   height = 320,
   className = "",
-  ambient = false,
 }: SolanaRiverProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -196,7 +186,6 @@ export default function SolanaRiver({
 
         const stops = colourStops(p.tx.colour);
 
-        // Trail
         for (const t of p.trail) {
           const tx = t.x * w;
           ctx!.beginPath();
@@ -205,7 +194,6 @@ export default function SolanaRiver({
           ctx!.fill();
         }
 
-        // Glow halo
         const radius = 4 + p.size;
         const glowGrad = ctx!.createRadialGradient(px, py, 0, px, py, radius * 6);
         glowGrad.addColorStop(0, rgba(stops.glow, 0.85));
@@ -216,39 +204,15 @@ export default function SolanaRiver({
         ctx!.arc(px, py, radius * 6, 0, Math.PI * 2);
         ctx!.fill();
 
-        // Core dot
-        ctx!.fillStyle =
-          p.tx.colour === "purple" ? "#C79FFF" : "#9CE0AE";
+        ctx!.fillStyle = p.tx.colour === "purple" ? "#C79FFF" : "#9CE0AE";
         ctx!.beginPath();
         ctx!.arc(px, py, radius, 0, Math.PI * 2);
         ctx!.fill();
 
-        // White hot center
         ctx!.fillStyle = "rgba(255, 255, 255, 0.9)";
         ctx!.beginPath();
         ctx!.arc(px, py, radius * 0.45, 0, Math.PI * 2);
         ctx!.fill();
-
-        // AUD label
-        let labelAlpha = 1;
-        if (p.x < 0.05) labelAlpha = p.x / 0.05;
-        else if (p.x > 0.92) labelAlpha = Math.max(0, (1.05 - p.x) / 0.13);
-
-        if (labelAlpha > 0.02) {
-          const labelText = formatAud(p.tx.audAmount);
-          const fontSize = mobile ? 10 : ambient ? 11 : 12;
-          ctx!.font = `600 ${fontSize}px Inter, system-ui, sans-serif`;
-          ctx!.textBaseline = "middle";
-
-          const labelX = px + radius + 8;
-          const labelY = py;
-
-          ctx!.fillStyle = `rgba(0, 0, 0, ${0.55 * labelAlpha})`;
-          ctx!.fillText(labelText, labelX + 1, labelY + 1);
-
-          ctx!.fillStyle = rgba(stops.glow, labelAlpha);
-          ctx!.fillText(labelText, labelX, labelY);
-        }
 
         remaining.push(p);
       }
@@ -261,7 +225,7 @@ export default function SolanaRiver({
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [ambient]);
+  }, []);
 
   function findNearestParticle(x: number, y: number, radius = 36) {
     const { h } = sizeRef.current;
@@ -391,13 +355,14 @@ export default function SolanaRiver({
               showTooltipAt.tx.colour === "purple" ? "text-[#C79FFF]" : "text-mint-glow"
             }`}
           >
-            {formatAud(showTooltipAt.tx.audAmount)} AUD ·{" "}
+            Solana mainnet tx ·{" "}
             {previewed ? "tap again to open" : "open on Solscan ↗"}
           </div>
           <div className="text-white/60">
             {showTooltipAt.tx.signature.slice(0, 14)}…
             {showTooltipAt.tx.signature.slice(-8)}
           </div>
+          <div className="text-white/40 mt-0.5">slot {showTooltipAt.tx.slot.toLocaleString()}</div>
         </div>
       )}
     </div>

@@ -7,7 +7,8 @@ const MAINNET_RPC =
   process.env.NEXT_PUBLIC_SOLANA_RPC ||
   "https://mainnet.helius-rpc.com/?api-key=fd23d5c6-3699-4e3e-8249-9bd774d3bdf6";
 
-// Four busy programs — combined throughput easily 1000+ sigs/sec.
+// Four busy programs — combined throughput easily 1000+ sigs/sec, so we never
+// run out of real signatures to display. We rotate through them per poll.
 const HOT_PROGRAMS = [
   new PublicKey("JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"), // Jupiter v6
   new PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"), // Raydium AMM v4
@@ -18,12 +19,12 @@ const HOT_PROGRAMS = [
 export type RiverColour = "mint" | "purple";
 
 export type RiverTx = {
+  /** Real Solana mainnet signature — every particle is backed by an on-chain tx. */
   signature: string;
   slot: number;
   spawnAt: number;
   lane: number;
   size: number;
-  audAmount: number;
   colour: RiverColour;
 };
 
@@ -34,19 +35,10 @@ export type RiverState = {
 
 const MAX_QUEUED = 400;
 const POLL_MS = 800;
-const PROGRAM_LIMIT = 20;
-
-function generateAudAmount(): number {
-  const r = Math.random();
-  if (r < 0.5) return Number((3 + Math.random() * 22).toFixed(2));
-  if (r < 0.78) return Number((25 + Math.random() * 70).toFixed(2));
-  if (r < 0.93) return Number((100 + Math.random() * 400).toFixed(0));
-  if (r < 0.99) return Number((500 + Math.random() * 1500).toFixed(0));
-  return Number((2000 + Math.random() * 3000).toFixed(0));
-}
+const PROGRAM_LIMIT = 25;
 
 function generateColour(): RiverColour {
-  // ~30% purple, ~70% mint — purple as a tasteful accent, not dominant
+  // ~30% purple, ~70% mint — purple as a tasteful accent
   return Math.random() < 0.3 ? "purple" : "mint";
 }
 
@@ -65,14 +57,6 @@ export function useSolanaRiver(lanes: number = 6): RiverState {
     let timer: ReturnType<typeof setTimeout>;
     let consecutiveFailures = 0;
 
-    function pushBatch(newTxs: RiverTx[]) {
-      if (!newTxs.length) return;
-      setTxs((prev) => {
-        const merged = [...prev, ...newTxs];
-        return merged.slice(-MAX_QUEUED);
-      });
-    }
-
     async function tick() {
       const program = HOT_PROGRAMS[programIdxRef.current % HOT_PROGRAMS.length];
       programIdxRef.current += 1;
@@ -87,6 +71,7 @@ export function useSolanaRiver(lanes: number = 6): RiverState {
         const fresh = sigs.filter((s) => !seenSigsRef.current.has(s.signature));
         for (const s of fresh) seenSigsRef.current.add(s.signature);
 
+        // Cap the seen-set so memory doesn't grow forever
         if (seenSigsRef.current.size > 5000) {
           const arr = Array.from(seenSigsRef.current);
           seenSigsRef.current = new Set(arr.slice(-2500));
@@ -99,18 +84,18 @@ export function useSolanaRiver(lanes: number = 6): RiverState {
             spawnAt: Date.now() + i * 30,
             lane: Math.floor(Math.random() * lanes),
             size: 1 + Math.floor(Math.random() * 3),
-            audAmount: generateAudAmount(),
             colour: generateColour(),
           }));
-          pushBatch(realTxs);
+          setTxs((prev) => [...prev, ...realTxs].slice(-MAX_QUEUED));
         }
 
         setStatus("live");
       } catch {
         consecutiveFailures += 1;
-        setStatus((s) => (s === "live" ? "live" : "error"));
+        if (consecutiveFailures > 6) setStatus("error");
       }
 
+      // Adaptive backoff on RPC failure
       let nextDelay = POLL_MS;
       if (consecutiveFailures >= 6) nextDelay = 5000;
       else if (consecutiveFailures >= 3) nextDelay = 2000;
