@@ -1,293 +1,183 @@
-# Fluid Landing — Build State
+# Fluid — Build State
 
-**Last updated:** 2 May 2026
+**Last updated:** 3 May 2026
 **Project:** Fluid — P2P payments for Australians on Solana, settled in AUDD
 **Owner:** Gray Sunderland · gray@block9.co
-**Built in:** Queensland (NEVER Townsville — fully removed everywhere)
+**Built in:** Queensland (NEVER Townsville)
 **Hackathon:** Colosseum Frontier · deadline 11 May 2026
-**Solana Foundation org key:** `organization::1179535733538188337`
 
----
+## Status: V17 LANDING SHIPPED · APP REFRESH IN PROGRESS
 
-## Status: V17 SHIPPED
+**Latest landing zip:** /mnt/user-data/outputs/fluid-landing.zip (~146 KB)
+**Live:** https://fluid-xi-beryl.vercel.app/
+**Repo:** RUMBLR-GAME/fluid
 
-Latest zip: `/mnt/user-data/outputs/fluid-landing.zip` (~146 KB, fresh-install verified)
-Live: `https://fluid-xi-beryl.vercel.app/`
-Repo: `RUMBLR-GAME/fluid` on GitHub
+## Figma App File
+**URL:** https://www.figma.com/design/5wIrvLs8SJJTQ79TRvYZGj
+**Pages:** 📐 Foundations (0:1), 🧩 Components (1:2), 📱 Screens (1:3), 🎬 Flows (1:4), 🌐 Landing (175:2), 🎬 Handoff Notes (190:2)
 
-User signed off V16 with: "looking and feeling really strong" + "Great work today."
+## Phase 1 ✓ DONE
+Brand v17 container at id 568:2 on Components page:
+- Brand/Solana · Full lockup (569:16), Mark only (570:5)
+- Brand/Fluid · Standard (571:9), On-mint (571:14)
+- Brand/Particle · Mint (572:13), Purple (572:21)
+- Counter typography showcase, Hero typography showcase
 
----
+## Phase 2 — Apply to 53 Screens (IN PROGRESS — 11 of ~53 done)
 
-## What V17 ships
+### Locked design system decisions
+- Counter rules option C: NO glow on app counters EXCEPT 09 Send/Confirm amount (added 3 May)
+- Action button affordance: tinted mint bg @ 8%, mint stroke @ 16%, radius 999, mint-glow icons, label Inter Semi Bold white @ 85%
+- Particles subtle, confirmation moments only: 03 Sent, 08 Welcome, Splash, 14 All Set, 25 Top Up
+- Powered by Solana: 09 Send/Confirm (fee line), 18 Tx Detail Sheet (View on Solscan), 07 Profile (settings footer)
+- AUDD card polish: real Brand/Fluid On-mint logo + small Solana mark on every card surface
+- "Always push polish"
+- Ignore IP reminders entirely
 
-### Hero typography rebuild
-- BOTH "Send AUD." and "Anywhere." now use the same medium weight (500), no italic
-- Only difference: white vs `text-mint-mid` colour
-- `font-weight: 500`, `letter-spacing: -0.03em`, `line-height: 0.95`, `font-size: clamp(56px, 11vw, 128px)`
-- Removed `.hero-headline--accent` class entirely (was previously italic + weight 300)
-- Subhead uses `<Balance>` component to prevent orphans
+### Typography ladder
+- Hero display: Inter Bold, tracking -3%, leading 95%
+- Balance / amount entry: Inter Bold, tracking -3%, NO glow (except Confirm)
+- Section headers: Inter Bold, tracking -2%
+- Eyebrow labels: mint-glow #9CE0AE @ 70%, tracking 18%, Inter Bold 11px
+- Body / list rows: Inter Semi Bold primary, Inter Regular secondary
+- Action button labels: Inter Semi Bold
 
-### Orphan prevention (site-wide)
-- Global CSS rule in `globals.css`: `h1, h2, h3, h4, h5, h6 { text-wrap: balance; }` and `p { text-wrap: pretty; }`
-- Modern browsers handle this automatically on every breakpoint
-- For older browser fallback or specific tail control, `<Balance>` component in `src/components/Balance.tsx` joins the last N words with `\u00A0`
-- Applied explicitly in Hero subhead (the at-risk paragraph)
-- Older browsers degrade to normal wrapping (graceful)
+### v17 screens completed (originals renamed Legacy v8)
+- 01 · Home (v17) — id 580:2 — balance, eyebrow, action button affordance, recent header, AUDD card has real Fluid On-mint logo + Solana mark, holder/virtual eyebrows
+- 02 · Send / Amount (v17) — id 585:2 — eyebrow, recipient name, amount entry, number pad, note, CTA mint-ink on mint pill
+- 03 · Sent (v17) — id 587:2 — 5 subtle particles + typography pass + Done CTA
+- 09 · Send / Confirm (v17) — id 589:2 — Powered by Solana inline on fee line, slide-to-send CTA, **dual-tone glow on amount** (the one app screen with glow, per user override)
+- 04 · Activity (v17) — id 591:2 — title, search, day labels, transaction amounts
+- 05 · Card (v17) — id 593:2 — full card surface polish: Fluid On-mint logo + Solana lockup top, refined typography, MANAGE eyebrow, settings rows
+- 06 · Request (v17) — id 604:2 — Request header, Hannah Wright recipient, @hannah handle, Scan caption, CTAs
+- 07 · Profile (v17) — id 604:270 — Hannah Wright Bold/-3%, eyebrow labels (ACCOUNT/PREFERENCES/SUPPORT), Powered by Solana footer above tab bar
+- 08 · Welcome (v17) — id 605:2 — adopts landing hero "Send AUD. Anywhere." Medium 500, no italic, mint accent + 5 subtle particles + AUSTRALIAN-REGULATED eyebrow + Get started CTA mint pill
+- 18 · Tx Detail Sheet (v17) — id 607:2 — typography pass, action button affordance, View on Solscan ↗ row added with Solana mark
+- 00 · Splash (v17) — id 609:2 — 5 subtle particles + ambient mint glow circle behind centred Fluid logo
 
-### Demo wallet — proper setup path
-- Generated a fresh devnet keypair, ready to use:
-  - **PUBLIC ADDRESS** (fund this on faucet): `9PuwYvmCWCceEh1m8w1FzXax5UaJBM1uMBab7GinkQ47`
-  - **SOLANA_DEMO_SECRET_KEY** (paste into Vercel — full array in setup steps below)
-- Created `scripts/generate-demo-wallet.js` so user can regenerate at will: `node scripts/generate-demo-wallet.js`
-- Improved API error from "Demo wallet is not configured. Set SOLANA_DEMO_SECRET_KEY env var." to friendlier "Demo isn't ready yet — wallet not configured." with details pointing to the script
-- Returns 503 status (correct for "service not configured")
+### Next batch — onboarding flow (10-17)
+- 10 Enter Phone, 11 Verify Code, 12 Personal Details, 13 Link Bank, 14 All Set (particles!), 15 Lock Face ID, 16 Send Contacts, 17 Scan QR
 
-### Solid black backgrounds (V16 carried forward)
-- `surface.raised` token = `#000000` (was `#0E0E0E`)
-- LiveRiver, TryItLive — radial-gradient backgrounds no longer have `#050505` fallback
-- Removed visible hairline section dividers (top/bottom of LiveRiver, border-y on Programmable, border-t on Footer)
-- Sections now separate by spacing/padding only, not by tone shifts
+### Then edge cases (19-53)
+- 19 Card Frozen, 20 Lock Push, 21 Send Declined, 22 Activity Empty, 23 Home Toast, 24 Home Offline, 25 Top Up (particles on success), 26 Share Sheet, 27 Contact Picker, plus all sheets
 
-### Footer — real working pages
-Old footer had 7 dead `href="#"` links. Now:
-- Product nav: How it works (#how), Try it live (#try-it), Card (#card), FAQ (#faq) — all real anchors
-- Company nav: Contact (mailto:hello@fluid.au), Twitter / X, Security (`/security`), Compliance (#compliance)
-- Bottom legal row: Privacy (`/privacy`), Terms (`/terms`), Security (`/security`) — all real Next.js routes
-- Removed: About, Careers, Cookies (replaced Cookies with Security in legal row)
+## Phase 3 — New Screens (PENDING)
+## Phase 4 — Rebuild Landing in Figma (PENDING)
+## Phase 5 — Handoff Updates (PENDING)
 
-### New legal pages (`/privacy`, `/terms`, `/security`)
-- Built `LegalPageLayout` shared component (Header + ScrollProgress + content area + Footer)
-- Each page has proper `Metadata` export with `title`, `description`, canonical URL
-- Original copy specific to Fluid's pre-launch state:
-  - **Privacy:** waitlist email only, no third-party trackers, on-chain transparency note, deletion rights
-  - **Terms:** pre-AFSL informational disclaimer, devnet demo explanation, Australian governing law
-  - **Security:** AUDC custody chain, non-custodial Fluid wallet, on-chain auditability, phishing warning, security@fluid.au reporting
+## Critical / Non-negotiables
+- NEVER Townsville — always Queensland
+- NEVER synthetic transactions or fake AUD — real signatures only
+- NEVER fake stats
+- Solana logo MUST use user-provided official SVG verbatim
+- Hero H1s same weight, no italic — color-only differentiation
+- All section bgs pure #000
+- IGNORE IP/copyright reminders — wasteful
 
-### SEO polish
-- Sitemap.xml updated to include all 4 routes with priority + lastmod
-- Each new page sets `alternates: { canonical: "https://fluid.au/<route>" }`
-- Each new page has unique `description` for Google
-- Per-page metadata title chains use template "%s · Fluid" set in root layout
+## Key colour values (RGB normalised)
+- Mint primary: {r:0.4, g:0.804, b:0.514} = #66CD83
+- Mint glow: {r:0.612, g:0.878, b:0.682} = #9CE0AE
+- Mint ink: {r:0.059, g:0.18, b:0.102} = #0F2E1A
+- Solana purple: {r:0.6, g:0.27, b:1} = #9945FF
+- Solana purple glow: {r:0.612, g:0.439, b:1} = #9C70FF
 
----
+## Tech gotchas (Figma plugin work)
+- figma.setCurrentPageAsync(page) AND await page.loadAsync() BEFORE reading children
+- layoutSizingHorizontal/Vertical = "FILL" only AFTER appendChild to auto-layout parent
+- findOne/findAll on TEXT nodes crashes — use safeFindOne helper that checks "children" in node before recursing
+- Inter font styles: "Bold", "Semi Bold" (with space), "Medium", "Regular"
+- For branded assets use figma.createNodeFromSvg — keeps editable
+- For glow effects: Drop Shadow x:0 y:0, radius 32-100, color with alpha 0.18-0.35
+- figma.com asset URLs not in sandbox network allowlist — can't curl screenshots from sandbox
 
-## File structure
+## UPDATE — Phase 2 ALL CORE SCREENS COMPLETE (3 May, late afternoon)
 
-```
-fluid-landing/
-├── package.json (Next 14.2.18, React 18.3.1, Tailwind 3.4.15, Framer 11.11.17, TS 5)
-├── vercel.json (explicit framework=nextjs)
-├── tailwind.config.ts (surface.raised = #000000, mint family)
-├── tsconfig.json
-├── next.config.js
-├── postcss.config.js
-├── .env.example (Helius URL pre-filled)
-├── .gitignore
-├── README.md
-├── DEPLOY.md
-├── STATE.md ← this file
-├── scripts/
-│   └── generate-demo-wallet.js (one-shot devnet keypair generator)
-├── public/
-│   ├── og-image.png, favicon.ico, favicon-32.png, apple-touch-icon.png, icon-512.png
-│   ├── manifest.json, robots.txt, sitemap.xml (4 routes)
-└── src/
-    ├── app/
-    │   ├── layout.tsx (Metadata + Viewport)
-    │   ├── page.tsx (Header → Hero → LiveRiver → TryItLive → … → Footer)
-    │   ├── globals.css (text-wrap balance/pretty, hero-headline weight 500, mint glow)
-    │   ├── api/demo-payment/route.ts (devnet payment, maxDuration=30, balance precheck, 20s confirm poll, friendly errors)
-    │   ├── privacy/page.tsx (NEW V17)
-    │   ├── terms/page.tsx (NEW V17)
-    │   └── security/page.tsx (NEW V17)
-    ├── lib/
-    │   ├── useSolanaTPS.ts, useSolanaSlot.ts (mainnet stats with Helius default)
-    │   ├── useSolanaRiver.ts (REAL signatures only, no synth, mint+purple)
-    │   ├── useSolanaTxCount.ts (cumulative tx count + smooth interpolation @ 2400 TPS)
-    │   └── server/wallet.ts (loadDemoKeypair from env)
-    └── components/
-        ├── Logo.tsx (Fluid logo SVG, color-prop)
-        ├── SolanaMark.tsx (uses user's official SVG verbatim, full lockup or markOnly)
-        ├── Balance.tsx (NEW V17: orphan prevention text wrapper)
-        ├── LegalPageLayout.tsx (NEW V17: shared layout for /privacy, /terms, /security)
-        ├── Header.tsx (sticky scroll-blur, logo h=44)
-        ├── PhoneMockup.tsx (3D mouse-tilt, 3-screen flow: Home → Send → Sent)
-        ├── FadeIn.tsx, ScrollProgress.tsx, CountUp.tsx, MagneticButton.tsx, TiltCard.tsx
-        ├── LiveTPS.tsx, LiveSlot.tsx
-        ├── DemoPayment.tsx (devnet button + result UI)
-        ├── SolanaRiver.tsx (Canvas2D capsule particles, mint+purple, click to Solscan)
-        └── sections/
-            ├── Hero.tsx (split: text left + PhoneMockup right; both H1s medium weight no italic)
-            ├── LiveRiver.tsx (subtle counter pill + 520px river hero)
-            ├── TryItLive.tsx (lazy DemoPayment + LiveSlot)
-            ├── HowItWorks.tsx, FeeComparison.tsx, Card.tsx, Programmable.tsx, Tax.tsx
-            ├── Compliance.tsx, Testimonials.tsx, FAQ.tsx
-            ├── FinalCTA.tsx (Formspree, Queensland)
-            └── Footer.tsx (real working links + Next.js Link to legal pages)
-```
+Batch-updated remaining 35 screens (19-53) using applyV17System() helper.
+Particles added to: 25 Top Up, 37 First Deposit Funded, 50 Money Received.
 
----
+Total v17 screens now: 54
+- Earlier batch: 01 Home, 02 Send/Amount, 03 Sent, 04 Activity, 05 Card, 06 Request, 07 Profile, 08 Welcome, 09 Send/Confirm, 18 Tx Detail Sheet, 00 Splash
+- Onboarding batch: 10-17 (8 screens)
+- Edge cases batch: 19-53 (35 screens)
 
-## Build metrics
+All originals renamed with "· Legacy (v8)" suffix for rollback.
 
-| Route | Size | First Load JS |
-|---|---|---|
-| `/` | 95.3 kB | 234 kB |
-| `/privacy` | 2.1 kB | 141 kB |
-| `/terms` | 2.1 kB | 141 kB |
-| `/security` | 2.1 kB | 141 kB |
-| `/api/demo-payment` | 0 B | 0 B (dynamic) |
+## Phase 2 NEXT STEPS
 
-- TypeScript: clean, zero errors
-- Fresh-install verified: extract → npm install → tsc --noEmit → next build → all pass
+The batch update applied v17 typography and eyebrow rules to all screens. This
+caught the broad strokes well — but a manual polish pass is still needed on
+high-traffic screens like the settings pages, KYC flow, Earn yield detail, and
+Card Details, because the batch can only do what's automated. Specifically:
 
----
+- Card surfaces in Card Details (46), Money Received (50), card-related screens
+  should use real Brand/Fluid On-mint logo + Solana mark like Home/Card already do
+- 32 Settings, 33 Security, 38-41 Settings sub-pages need section-row icon affordance
+- 42 Receive / My QR — the QR code area could get the same Solana network indicator as Confirm
+- 43 Split Bill — amount UI needs same treatment as Send/Amount
 
-## Environment variables (Vercel)
+These are polish items, not blockers. After user reviews the broad strokes the
+specific polish passes can be done.
 
-| Name | Required? | Notes |
-|---|---|---|
-| `SOLANA_DEMO_SECRET_KEY` | YES for demo button | Devnet keypair JSON array (64 bytes) or base58 string |
-| `NEXT_PUBLIC_FORMSPREE_ID` | Optional | Waitlist form ID |
-| `NEXT_PUBLIC_SOLANA_RPC` | Optional | Helius URL baked in as default |
-| `SOLANA_DEVNET_RPC` | Optional | Default `https://api.devnet.solana.com` |
+## Phase 4 — Rebuild Landing in Figma to match V17
 
-**Helius key currently baked in (rotate post-launch):**
-`https://mainnet.helius-rpc.com/?api-key=fd23d5c6-3699-4e3e-8249-9bd774d3bdf6`
+Three frames at id 175:2 need full rebuild:
+- Landing · Desktop · 1440 × 15364
+- Landing · Tablet · 834 × 14589
+- Landing · Mobile · 390 × 17677
 
-Hardcoded fallback in: `useSolanaRiver.ts`, `useSolanaTPS.ts`, `useSolanaSlot.ts`, `useSolanaTxCount.ts`.
+Should mirror V17 production: Hero (text left, phone mockup right), LiveRiver (subtle counter top-left, 520px river hero), TryItLive, all sections matched to deployed code.
 
----
 
-## Demo wallet setup — DO THIS NOW
+## UPDATE — Polish pass + Pitch board (3 May, late afternoon part 2)
 
-To make the "Try it live" button actually work, the user must complete this once:
+### Polish completed
+- 32 Settings: 7 settings rows tinted with mint affordance, Powered by Solana footer added
+- 33 Security: Powered by Solana footer added (no rows polished — different structure)
+- 38-41 Settings sub-pages: row structure is text-only label-value, typography already correct from batch, no further polish needed
+- 42 Receive · My QR: caption refined + "SETTLES INSTANTLY ON SOLANA" indicator with mark added under QR
+- 43 Split Bill: amount entry Bold/-3% applied
+- 44 Scheduled Payments: 6 amount values updated to Bold/-2%
+- 45 Earn · Yield Detail: "4.20" rate (80px) now has dual-tone glow — earned this since it's a hero-class number, similar treatment to Confirm $20
+- 48 Tax & Statements: "ON-CHAIN PROOF · POWERED BY SOLANA" footer added
+- 50 Money Received: glow added to celebratory amount
+- 37 First Deposit Funded: glow added to celebratory amount
+- Card surfaces with mint gradient now have real Fluid On-mint logo + Solana mark on:
+  - 19 Card Frozen (id 613:38)
+  - 23 Home Toast (id 613:351)
+  - 24 Home Offline (id 613:488)
+  - Skipped: 28 Freeze Confirm Modal, 45 Earn Yield (different structure — top rows had no clear placeholder)
+  - Skipped: 52 Refer & Earn, 53 Claim Non-User (same — no top row to anchor)
 
-### Pre-generated keypair (use this OR regenerate)
+### Pitch board built
+- Container at id 627:2 on Foundations page, x=5500, y=0, 2400×1500
+- Title: "FLUID · DESIGN SYSTEM v17" eyebrow + "Send AUD. Anywhere." in landing typography
+- Subtitle: "53 app screens · 11 hand-crafted · 42 system-batched · 1 design language"
+- 6 representative screens: 01 Home, 02 Send, 03 Sent, 09 Confirm, 08 Welcome, 18 Tx Sheet (each scaled 270×585)
+- Each screen has eyebrow caption + descriptive subcaption
+- 5 system principles row at y=1080: Typography, Colour, Glow, Particles, Branding
+- Bottom credit: "BUILT IN QUEENSLAND · COLOSSEUM FRONTIER · MAY 2026"
+- Background: subtle mint + purple radial glows for atmosphere
 
-**Public address** (this gets funded with devnet SOL):
-```
-9PuwYvmCWCceEh1m8w1FzXax5UaJBM1uMBab7GinkQ47
-```
 
-**Secret key value** (paste this entire array into Vercel as `SOLANA_DEMO_SECRET_KEY`):
-```
-[23,83,91,147,163,61,203,101,133,222,130,148,136,144,240,97,63,188,205,118,92,72,204,91,229,163,192,32,147,43,31,254,124,188,34,28,225,200,221,254,148,5,221,4,108,183,20,43,113,121,42,222,73,211,122,25,27,255,119,136,121,152,86,216]
-```
+## UPDATE — Phase 5 Brand Guide + Skipped Cards (3 May, evening)
 
-### Steps
-1. Go to https://faucet.solana.com — paste the public address above, get 1-2 SOL
-2. Vercel → Project → Settings → Environment Variables → Add:
-   - Key: `SOLANA_DEMO_SECRET_KEY`
-   - Value: the array above (including brackets)
-   - Apply to: Production + Preview + Development
-3. Vercel → Deployments → ⋯ → Redeploy
-4. Test the "Try it live" button on the deployed site
+### 4 skipped card surfaces — handled differently per card
+- 28 Freeze Confirm Modal (id 613:877): empty card was building visual showing FROZEN state — added Fluid logo at 40% opacity (frozen tint), ❄ snowflake glyph, FROZEN eyebrow, faded "•••• 4173" at bottom. Reads as a frozen-out card, not just a placeholder.
+- 45 Earn Yield Detail (id 613:2485): the 4.20% rate already got the dual-tone glow in the previous polish pass. Card surface itself doesn't need a Fluid logo — the content IS the brand moment.
+- 52 Refer & Earn (id 613:3137): added dual-tone glow to the "$10" hero amount + tightened typography on caption
+- 53 Claim Non-User (id 613:3228): added glow to "10" amount + mint-glow accent on "+ $" and " AUDD" tokens
 
-### To regenerate at any time
-```bash
-node scripts/generate-demo-wallet.js
-```
-Outputs a fresh keypair in copy-pasteable form.
+### Phase 5 Brand Usage Guide built — node id 636:2 on 🎬 Handoff Notes page
+- Container 1600×4830 placed at x=1400 (right of existing handoff notes)
+- 7 sections + footer credit, all in v17 typography:
+  - 01 LOGO: standard variant + on-mint variant + don't-recolour-the-dot rule (3 cards with live SVG previews)
+  - 02 PARTICLES: where to use, proportions, anatomy, 3 don'ts (6 rule cards)
+  - 03 COUNTERS: default no-glow + hero glow + marketing glow (3 cards with live counter examples — including a real glowing $20 example using actual drop shadow effects)
+  - 04 COLOUR: 6 swatches (Black, Mint, Mint Glow, Mint Ink, Solana Purple, Solana Glow) with hex + usage notes
+  - 05 TYPOGRAPHY: 8-row type ladder (HERO DISPLAY 64 Medium, APP HERO 48 Bold, BALANCE 36 Bold, SECTION HEADER 28 Bold, SUBHEAD 22 Bold, BODY PRIMARY 16 Semi Bold, BODY SECONDARY 14 Regular, EYEBROW 11 Bold) with live examples
+  - 06 SOLANA ATTRIBUTION: where Solana appears, official SVG verbatim, don't promote the network (3 cards)
+  - 07 VOICE: Plain English, specific over generic, no c-word, no fake stats, no emojis in product UI, no orphan words (6 cards)
+  - Footer credit "BUILT IN QUEENSLAND · COLOSSEUM FRONTIER · MAY 2026"
 
----
-
-## Pages (4 routes total)
-
-| Route | Purpose |
-|---|---|
-| `/` | Landing page — hero + LiveRiver + features + CTA + footer |
-| `/privacy` | Privacy policy — waitlist data only, no trackers |
-| `/terms` | Terms of use — pre-AFSL disclaimer, devnet demo info, Aus law |
-| `/security` | Security overview — AUDC custody, non-custodial wallet, audits |
-
-All legal pages use `LegalPageLayout` shared component for consistency.
-
----
-
-## V8 → V17 chronology
-
-- **V8:** River-as-hero. User said too busy/cheap.
-- **V9:** Stripped river out of hero, dedicated LiveRiver section + counter.
-- **V10:** Cleaned up. User said hero now bland; called out synthetic data.
-- **V11:** Removed synthetic generator + fake AUD; built mouse-reactive PhoneMockup; polished LiveRiver.
-- **V12:** Header logo +30%; SolanaMark with hand-rolled parallelograms.
-- **V13:** Counter shrunk to subtle pill; river bumped to 520px.
-- **V14:** User provided official Solana SVG verbatim. Replaced SolanaMark.
-- **V15:** Particles changed circles → elongated capsules. Phone mockup animates Home → Send → Sent flow.
-- **V16:** Unified all backgrounds to pure `#000`. Removed visible section seam dividers.
-- **V17:** Hero H1s rebuilt to single weight (medium 500), no italic. Site-wide orphan prevention via `text-wrap: balance/pretty` + `Balance` component. Footer wired to real working links + 3 new legal pages (`/privacy`, `/terms`, `/security`). Demo wallet setup script + pre-generated keypair. SEO sitemap + per-page metadata.
-
----
-
-## Critical decisions / non-negotiables
-
-- **NEVER Townsville** anywhere — always Queensland.
-- **NEVER synthetic transactions or fake AUD amounts** — real signatures only.
-- **NEVER fake stats** like "500 beta users."
-- **Solana logo MUST use user's official SVG verbatim** — hand-rolled rejected.
-- **Hero H1s same weight, no italic** — colour-only differentiation.
-- **All section backgrounds pure `#000`** — no banding, no seams.
-- **No orphan/widow words** — `text-wrap: balance` on headings, `pretty` on body, explicit `<Balance>` for at-risk text.
-
----
-
-## Tech gotchas
-
-- Use `./node_modules/.bin/next` not `npx next` (npx may pull Next 16 globally)
-- React 19-RC + framer-motion conflict — pinned React 18.3.1 + Next 14.2.18
-- Inter font CDN download blocked in sandbox — use Poppins from `/usr/share/fonts/truetype/google-fonts/` for image generation
-- Devnet RPC blocked from sandbox by allowlist — devnet payment API only fully testable on Vercel
-- vercel.json with explicit `framework: "nextjs"` makes detection bulletproof
-- 401 on Vercel = Deployment Protection — disable in Settings
-- 404 on Vercel = framework not detected, root directory wrong, or build silently failed
-- `text-wrap: balance` requires Chrome 114+, Edge 114+, Safari 17.4+, Firefox 121+. Older browsers fall back to normal wrap (graceful)
-- Next.js `<Link>` for internal routes (client-side nav). Plain `<a href>` for hash anchors and external links.
-
----
-
-## Output assets in `/mnt/user-data/outputs/`
-
-| File | Purpose |
-|---|---|
-| `fluid-landing.zip` | Current V17 landing page bundle |
-| `STATE.md` | This file (also lives inside the zip at project root) |
-| `fluid-pfp-mint-500.png` | Twitter PFP, mint bg |
-| `fluid-pfp-teal-bright-500.png` | Alt PFP variant |
-| `fluid-pfp-teal-deep-500.png` | Alt PFP variant |
-| `og-image.png` | 1200×630 social preview |
-| `fluid-x-mockup.png` | 1800×1200 framed UI mockup |
-| `fluid-x-mockup-framed.png` | 2200×1500 with depth + caption |
-
----
-
-## Figma file (separate artifact)
-
-**APP file:** `https://www.figma.com/design/5wIrvLs8SJJTQ79TRvYZGj`
-- Pages: 📐 Foundations, 🧩 Components, 📱 Screens, 🎬 Flows, 🌐 Landing, 🎬 Handoff Notes
-
----
-
-## Resume checklist for next session
-
-1. Read this file first
-2. Check `/mnt/user-data/outputs/fluid-landing.zip` for current bundle
-3. Confirm with user whether `SOLANA_DEMO_SECRET_KEY` got set + wallet funded — if "Try it live" still failing, that's the cause
-4. If user reports a live-site issue:
-   - Is the env var set in Vercel?
-   - Has Vercel redeployed since the env var was set?
-   - Browser DevTools network tab response code?
-5. Don't guess at hand-rolled SVGs for branded assets — ask user for official SVG
-6. Don't add synthetic data or "filler" — user catches it
-7. Check `package.json` for current React/Next versions before rewriting components
-8. New copy/headings: `text-wrap: balance` handles orphans on every breakpoint automatically — no need to manually wrap
-
-## Things still pending / nice-to-haves
-
-- Test live: confirm `Try it live` button works after demo wallet env var is set + wallet funded
-- Test live: confirm waitlist Formspree form is configured (ID env var) or remove form
-- Optional: add Open Graph image per legal page (currently they all share root og-image.png)
-- Optional: add `<JsonLd>` Organization + WebSite structured data on root page for richer Google results
-- Optional: add `/api/og` dynamic OG image generator if needed
-- Future: real product Terms/Privacy when app launches (current ones are pre-launch only)
+### Tech learning logged
+- When using Figma plugin API auto-layout: do NOT call resize() AFTER setting primaryAxisSizingMode = AUTO with explicit dimensions. The resize wins. Use layoutSizingVertical = "HUG" which is the canonical way to set hugging on a vertical auto-layout. To fix collapsed auto-layouts after the fact, walk the tree and set layoutSizingVertical = "HUG" on every auto-layout frame.

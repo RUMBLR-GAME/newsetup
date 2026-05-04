@@ -2,8 +2,6 @@
 
 Production-ready Next.js 14 landing page for Fluid — a free, instant Australian payments app on Solana, settled in AUDD.
 
-Built for the Solana Frontier Hackathon (May 2026).
-
 ---
 
 ## What's in here
@@ -231,7 +229,7 @@ Hero font weight is **Inter Bold** (700). Logo is an inline SVG component (`Logo
 
 The footer states accurately:
 
-> Fluid is a Solana Frontier Hackathon project (May 2026). AUDD is real and issued by AUDC Pty Ltd under an AFSL granted by ASIC. AUDC is registered with AUSTRAC and is a member of AFCA. Fluid is pursuing its own AFSL pathway ahead of the June 2026 ASIC no-action expiry.
+> AUDD is real and issued by AUDC Pty Ltd under an AFSL granted by ASIC. AUDC is registered with AUSTRAC and is a member of AFCA. Fluid is pursuing its own AFSL pathway ahead of the June 2026 ASIC no-action expiry.
 
 The TryItLive section also explicitly notes:
 

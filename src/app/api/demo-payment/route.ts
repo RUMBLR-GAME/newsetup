@@ -21,7 +21,7 @@ const TRANSFER_LAMPORTS = 1_000; // 0.000001 SOL
 
 // Simple in-memory rate limit (per Vercel instance). Resets when instance recycles.
 // For production-grade rate limiting use Upstash / Vercel KV. This is a
-// reasonable abuse-floor for a hackathon demo.
+// reasonable abuse-floor for the public Try-it-live demo.
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
 const RATE_LIMIT_MAX = 4; // 4 demo payments per IP per minute
 const ipHits = new Map<string, number[]>();

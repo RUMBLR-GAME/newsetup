@@ -22,10 +22,10 @@ export default function TermsPage() {
         What this site is
       </h2>
       <p>
-        Fluid is a Solana Frontier Hackathon project (May 2026) building a
-        peer-to-peer payments app for Australians. AUDD is a real
-        Australian-dollar stablecoin issued by AUDC Pty Ltd, regulated under
-        an Australian Financial Services Licence granted by ASIC.
+        Fluid is a peer-to-peer payments product for Australians, built in
+        Queensland. AUDD is a real Australian-dollar stablecoin issued by AUDC
+        Pty Ltd, regulated under an Australian Financial Services Licence
+        granted by ASIC.
       </p>
       <p>
         Fluid does not yet hold its own AFSL. We are pursuing one ahead of the

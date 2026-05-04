@@ -99,12 +99,11 @@ export default function Footer() {
               Honest disclosure
             </p>
             <p className="text-xs text-white/55 leading-relaxed">
-              Fluid is a Solana Frontier Hackathon project (May 2026). AUDD is
-              real and issued by AUDC Pty Ltd under an AFSL granted by ASIC.
-              AUDC is registered with AUSTRAC and is a member of AFCA. Fluid is
-              pursuing its own AFSL pathway ahead of the June 2026 ASIC
-              no-action expiry. Nothing on this page is financial advice — get
-              advice for your situation.
+              AUDD is real and issued by AUDC Pty Ltd under an AFSL granted by
+              ASIC. AUDC is registered with AUSTRAC and is a member of AFCA.
+              Fluid is pursuing its own AFSL pathway ahead of the June 2026
+              ASIC no-action expiry. Nothing on this page is financial advice
+              — get advice for your situation.
             </p>
           </div>
         </div>
