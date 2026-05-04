@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import ScrollProgress from "@/components/ScrollProgress";
 import Hero from "@/components/sections/Hero";
 import LiveRiver from "@/components/sections/LiveRiver";
-import TryItLive from "@/components/sections/TryItLive";
+import OnChainProof from "@/components/sections/OnChainProof";
 import HowItWorks from "@/components/sections/HowItWorks";
 import FeeComparison from "@/components/sections/FeeComparison";
 import Card from "@/components/sections/Card";
@@ -21,7 +21,7 @@ export default function Home() {
       <Header />
       <Hero />
       <LiveRiver />
-      <TryItLive />
+      <OnChainProof />
       <HowItWorks />
       <FeeComparison />
       <Card />
