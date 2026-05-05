@@ -43,9 +43,9 @@ export default function Tax() {
               </div>
               <div className="space-y-3 pt-6 border-t border-white/[0.06]">
                 <div className="flex justify-between text-sm">
-                  <span className="text-white/55">Interest earned (4.10%)</span>
+                  <span className="text-white/55">Interest earned (4.20%)</span>
                   <span className="font-medium">
-                    $<CountUp to={84.18} decimals={2} duration={1.2} />
+                    $<CountUp to={84.0} decimals={2} duration={1.2} />
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">

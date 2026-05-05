@@ -43,8 +43,8 @@ export default function Header() {
           <a href="#how" className="text-sm text-white/70 hover:text-white transition-colors">
             How it works
           </a>
-          <a href="#card" className="text-sm text-white/70 hover:text-white transition-colors">
-            Card
+          <a href="#what-is-fluid" className="text-sm text-white/70 hover:text-white transition-colors">
+            What is Fluid
           </a>
           <a href="#compliance" className="text-sm text-white/70 hover:text-white transition-colors">
             Compliance

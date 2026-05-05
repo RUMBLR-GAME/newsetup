@@ -107,10 +107,10 @@ export default function Hero() {
               className="flex flex-col sm:flex-row gap-3 mb-12"
             >
               <MagneticButton
-                href="#try-it"
+                href="#what-is-fluid"
                 className="group inline-flex items-center justify-center gap-2 bg-mint-mid text-mint-ink font-semibold px-6 py-4 rounded-full hover:bg-mint-glow transition-colors shadow-[0_0_40px_rgba(102,205,131,0.4)]"
               >
-                Try it live
+                See how it works
                 <span
                   aria-hidden
                   className="transition-transform group-hover:translate-x-0.5"
@@ -150,10 +150,10 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-[10px] tracking-[0.14em] text-white/40 mb-1.5 uppercase font-semibold">
-                  Issued under
+                  Idle yield
                 </p>
-                <p className="text-base md:text-lg font-bold tracking-tight">
-                  AUDC AFSL
+                <p className="text-base md:text-lg font-bold tracking-tight text-mint-mid">
+                  <CountUp to={4.20} decimals={2} duration={1.4} suffix="% p.a." />
                 </p>
               </div>
             </motion.div>

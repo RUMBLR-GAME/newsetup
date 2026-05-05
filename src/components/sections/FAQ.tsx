@@ -21,7 +21,7 @@ const faqs = [
     a: "Yes. Send to a phone number or email and they'll get an SMS/email with a claim link. They sign up, the funds drop into their wallet. There's a $10 welcome bonus for both you and them on the first send.",
   },
   {
-    q: "How does the 4.10% yield work?",
+    q: "How does the 4.20% yield work?",
     a: "Your AUDD balance earns yield tracked to the RBA cash rate, accruing per-second. Yield is generated through AUDC's reserve management. We pay it out daily into your balance — no lockups, no minimums.",
   },
   {

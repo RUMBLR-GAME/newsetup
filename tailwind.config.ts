@@ -9,7 +9,7 @@ const config: Config = {
         mint: {
           glow: "#9CE0AE",
           mid: "#66CD83",
-          deep: "#3D9656",
+          deep: "#3DAF5C",
           ink: "#0F2E1A",
         },
         // Surfaces

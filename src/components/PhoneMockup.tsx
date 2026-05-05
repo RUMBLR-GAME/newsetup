@@ -89,7 +89,7 @@ function StatusBar() {
   );
 }
 
-// === Screen 1 — Home ===
+// === Screen 1 — Home (v1: no card) ===
 function HomeScreen({
   cardX,
   cardY,
@@ -99,82 +99,80 @@ function HomeScreen({
   cardY: ReturnType<typeof useMotionValue<number>> | any;
   sheenBg: any;
 }) {
+  // cardX/cardY/sheenBg are kept in props for type compat with the other screens —
+  // we don't render the card surface anymore.
+  void cardX; void cardY; void sheenBg;
+
   return (
     <div className="px-5 pt-2 h-full">
-      {/* Header: Fluid logo + avatar */}
+      {/* Header: avatar + bell */}
       <div className="flex items-center justify-between mb-6">
-        <FluidLogo height={28} />
-        <div className="w-9 h-9 rounded-full bg-white/[0.06] border border-white/[0.08] flex items-center justify-center">
-          <span className="text-[11px] font-bold text-white/80">G</span>
+        <div className="w-9 h-9 rounded-full bg-mint-mid/[0.08] border border-mint-mid/[0.15] flex items-center justify-center">
+          <span className="text-[11px] font-bold text-mint-glow">G</span>
+        </div>
+        <div className="w-9 h-9 rounded-full flex items-center justify-center text-white/70">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.7 21a2 2 0 01-3.4 0" />
+          </svg>
         </div>
       </div>
 
-      {/* Balance */}
-      <div className="mb-5">
-        <p className="text-[10px] tracking-[0.18em] text-white/40 uppercase font-bold mb-1.5">
-          Balance
+      {/* Balance hero — centred */}
+      <div className="flex flex-col items-center text-center pt-4 pb-2">
+        <p className="text-[10px] tracking-[0.14em] text-mint-glow/70 uppercase font-bold mb-3">
+          Available
         </p>
-        <p className="text-white text-[32px] font-bold tracking-tight tabular-nums leading-none">
-          $4,287
-          <span className="text-white/40 text-[22px]">.34</span>
-        </p>
+        <div className="flex items-baseline tabular-nums">
+          <span className="text-white text-[22px] font-semibold">$</span>
+          <span className="text-white text-[56px] font-semibold tracking-[-0.04em] leading-none">
+            4,287
+          </span>
+          <span className="text-white/60 text-[22px] font-semibold">.34</span>
+        </div>
+
+        {/* Earning pill */}
+        <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-mint-mid/[0.08] border border-mint-mid/[0.15] px-3 py-1.5">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint-mid opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint-mid" />
+          </span>
+          <span className="text-[12px] font-semibold text-mint-glow">
+            Earning 4.20% p.a.
+          </span>
+        </div>
       </div>
 
-      {/* Mint card */}
-      <motion.div
-        style={{ x: cardX, y: cardY }}
-        className="relative rounded-3xl p-5 mb-5 overflow-hidden"
-      >
-        <div
-          className="absolute inset-0 rounded-3xl"
-          style={{
-            background:
-              "linear-gradient(135deg, #66CD83 0%, #4CB66A 50%, #3D9656 100%)",
-          }}
-        />
-        <motion.div
-          aria-hidden
-          className="absolute inset-0 rounded-3xl opacity-50"
-          style={{ background: sheenBg }}
-        />
-        <div className="relative">
-          <div className="flex items-center justify-between mb-10">
-            <FluidLogo height={20} letterColor="#0F2E1A" dotColor="#FFFFFF" />
-            <span className="text-[10px] tracking-[0.18em] text-mint-ink/60 uppercase font-bold">
-              AUDD
-            </span>
-          </div>
-          <p className="text-mint-ink/55 text-[10px] tracking-[0.14em] uppercase font-bold mb-1">
-            Available
-          </p>
-          <p className="text-mint-ink text-[26px] font-bold tracking-tight tabular-nums leading-none mb-5">
-            A$ 4,287.34
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-mint-ink/50 text-[10px] tracking-[0.14em] uppercase font-bold">
-              •••• 4321
-            </span>
-            <div className="flex items-center gap-1.5">
-              <SolanaMark markOnly height={12} />
-              <span className="text-mint-ink text-[11px] font-bold tracking-tight">
-                Solana
-              </span>
+      {/* Three action tiles */}
+      <div className="grid grid-cols-3 gap-3 mt-6 mb-6">
+        {[
+          { label: "Send", icon: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" },
+          { label: "Receive", icon: "M17 7L7 17M17 17H7V7" },
+          { label: "Top up", icon: "M12 5v14M5 12h14" },
+        ].map((t) => (
+          <div key={t.label} className="flex flex-col items-center gap-2">
+            <div className="w-14 h-14 rounded-full bg-mint-mid/[0.08] border border-mint-mid/[0.14] flex items-center justify-center text-mint-glow">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d={t.icon} />
+              </svg>
             </div>
+            <span className="text-[13px] font-semibold text-white/85">{t.label}</span>
           </div>
-        </div>
-      </motion.div>
+        ))}
+      </div>
 
       {/* Recent label */}
-      <p className="text-[10px] tracking-[0.18em] text-white/40 uppercase font-bold mb-3">
-        Recent
-      </p>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-white text-[16px] font-bold tracking-[-0.02em]">Recent</p>
+        <p className="text-mint-glow text-[11px] font-semibold">See all</p>
+      </div>
 
       {/* Tx rows */}
       <TxRow incoming label="From Maya" sub="Just now · 0.4s" amount="+$48" />
       <TxRow
-        label="Coffee · The Edge"
-        sub="8:14 AM · Brisbane"
-        amount="−$5.50"
+        label="Marcus · Thai dinner"
+        sub="8:14 AM"
+        amount="−$47.50"
       />
       <TxRow incoming label="Payday" sub="Yesterday · 0.4s" amount="+$2,100" />
     </div>

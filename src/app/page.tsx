@@ -2,10 +2,10 @@ import Header from "@/components/Header";
 import ScrollProgress from "@/components/ScrollProgress";
 import Hero from "@/components/sections/Hero";
 import LiveRiver from "@/components/sections/LiveRiver";
+import WhatIsFluid from "@/components/sections/WhatIsFluid";
 import OnChainProof from "@/components/sections/OnChainProof";
 import HowItWorks from "@/components/sections/HowItWorks";
 import FeeComparison from "@/components/sections/FeeComparison";
-import Card from "@/components/sections/Card";
 import Programmable from "@/components/sections/Programmable";
 import Tax from "@/components/sections/Tax";
 import Compliance from "@/components/sections/Compliance";
@@ -21,10 +21,10 @@ export default function Home() {
       <Header />
       <Hero />
       <LiveRiver />
+      <WhatIsFluid />
       <OnChainProof />
       <HowItWorks />
       <FeeComparison />
-      <Card />
       <Programmable />
       <Tax />
       <Compliance />

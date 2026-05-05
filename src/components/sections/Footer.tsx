@@ -33,15 +33,15 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#try-it"
+                  href="#what-is-fluid"
                   className="hover:text-white transition-colors"
                 >
-                  Try it live
+                  See how it works
                 </a>
               </li>
               <li>
-                <a href="#card" className="hover:text-white transition-colors">
-                  Card
+                <a href="#what-is-fluid" className="hover:text-white transition-colors">
+                  What is Fluid
                 </a>
               </li>
               <li>

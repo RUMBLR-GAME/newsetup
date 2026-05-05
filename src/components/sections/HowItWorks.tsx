@@ -18,9 +18,9 @@ const items = [
   },
   {
     number: "03",
-    eyebrow: "Spend",
-    title: "A real card. For real shops.",
-    body: "Apple Pay, Google Pay, contactless. Spend AUDD anywhere Visa works — your balance stays earning yield until the moment you tap.",
+    eyebrow: "Yield",
+    title: "Idle AUD doesn't have to sit idle.",
+    body: "Your balance earns 4.20% p.a., paid daily. No lock-up. Withdraw or send any time. The same money working twice.",
   },
 ];
 
